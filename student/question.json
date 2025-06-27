@@ -1,0 +1,47 @@
+[
+  {
+    "subject": "Physics",
+    "questions": [
+      {
+        "id": "phy1",
+        "question": "What is the unit of force?",
+        "options": {
+          "A": "Newton",
+          "B": "Joule",
+          "C": "Pascal",
+          "D": "Watt"
+        }
+      }
+    ]
+  },
+  {
+    "subject": "Chemistry",
+    "questions": [
+      {
+        "id": "chem1",
+        "question": "What is the atomic number of Oxygen?",
+        "options": {
+          "A": "6",
+          "B": "7",
+          "C": "8",
+          "D": "9"
+        }
+      }
+    ]
+  },
+  {
+    "subject": "Math",
+    "questions": [
+      {
+        "id": "math1",
+        "question": "What is the derivative of x^2?",
+        "options": {
+          "A": "x",
+          "B": "2x",
+          "C": "x^2",
+          "D": "1"
+        }
+      }
+    ]
+  }
+]
