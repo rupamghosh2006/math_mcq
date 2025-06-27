@@ -1,52 +1,214 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    </head>
-    <body>
-        Upload Image:
-        <button>
-            <input id="imgInput" type="file" accept="image/*" capture="environment" onchange="handleImg(this)">
-        </button>
-        Upload PDF:
-        <button>
-            <input id="pdfInput" type="file" accept=".pdf, application/pdf" onchange="handlePdf(this)">
-        </button>
-        <div id="output"></div>
-        <textarea id="textOutput" rows="10" cols="50"></textarea>
-        <button type="submit">SAVE</button>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scan Question</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  </head>
+  <body class="bg-cyan-50 min-h-screen text-gray-800 flex flex-col">
 
-        <script>
-            const root = document.getElementById("output")
-            const textArea = document.getElementById("textOutput")
+<!-- Navbar -->
+    <nav class="bg-white shadow-md py-2 px-4 flex justify-between items-center sticky top-0 z-50">
+      <!-- Logo -->
+      <div>
+        <img src="assets/logo.png" alt="Logo" class="h-10 w-auto" />
+      </div>
 
-            function handleImg(input) {
-                const file = input.files[0]
-                const reader = new FileReader()
-                reader.onload = function (e) {
-                    const imgData = e.target.result
-                    const img = new Image()
-                    img.src = imgData
-                    root.innerHTML = ""
-                    root.appendChild(img)
-                    Tesseract.recognize(
-                        imgData,
-                        'eng',
-                        { logger: m => console.log(m) }
-                    ).then(({ data: { text } }) => {
-                        textArea.value = text
-                        input.value = ""
-                    })
-                }
-                reader.readAsDataURL(file)
-            }
+      <!-- Menu -->
+      <div class="space-x-2 text-sm md:space-x-4 md:text-base">
+        <a href="index.html" class="font-semibold text-cyan-700 border-b-2 border-cyan-700">Home</a>
+        <a href="scan.html" class="font-medium text-gray-600 hover:text-cyan-600">Scan</a>
+        <a href="test.html" class="font-medium text-gray-600 hover:text-cyan-600">Test</a>
+        <a href="profile.html" class="font-medium text-gray-600 hover:text-cyan-600">Profile</a>
+      </div>
+    </nav>
 
+    <main class="flex flex-col items-center p-4 flex-1">
+      <h1 class="text-2xl font-bold mb-6">Scan Question</h1>
 
-            function handlePdf(input) {
-                const file = input.files[0]
-                window.alert("PDF uploading not implemented.")
-                input.value = ""
-            }
-        </script>
-    </body>
+      <!-- Upload Inputs -->
+      <div class="mb-4 w-full max-w-md">
+        <label class="block mb-1 font-medium">Upload Image:</label>
+        <input
+          id="imgInput"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onchange="handleImg(this)"
+          class="p-2 border rounded w-full"
+        />
+      </div>
+
+      <div class="mb-4 w-full max-w-md">
+        <label class="block mb-1 font-medium">Upload PDF:</label>
+        <input
+          id="pdfInput"
+          type="file"
+          accept=".pdf,application/pdf"
+          onchange="handlePdf(this)"
+          class="p-2 border rounded w-full"
+        />
+      </div>
+
+      <!-- Image Output -->
+      <div id="output" class="my-4 max-w-md mx-auto"></div>
+
+      <!-- OCR Text & Options -->
+      <div class="mb-6 w-full max-w-2xl">
+        <label class="block mb-1 font-medium">Extracted Question:</label>
+        <textarea
+          id="textOutput"
+          rows="4"
+          class="w-full p-2 border rounded"
+          placeholder="Question will appear here..."
+        ></textarea>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <input type="text" id="optA" placeholder="Option A" class="p-2 border rounded" />
+          <input type="text" id="optB" placeholder="Option B" class="p-2 border rounded" />
+          <input type="text" id="optC" placeholder="Option C" class="p-2 border rounded" />
+          <input type="text" id="optD" placeholder="Option D" class="p-2 border rounded" />
+        </div>
+      </div>
+
+      <!-- Categorization -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 w-full max-w-2xl">
+        <select id="classSelect" class="p-2 border rounded">
+          <option disabled selected>Select Class</option>
+          <option value="11">Class 11</option>
+          <option value="12">Class 12</option>
+        </select>
+
+        <select id="subjectSelect" class="p-2 border rounded">
+          <option disabled selected>Select Subject</option>
+          <option value="Physics">Physics</option>
+          <option value="Chemistry">Chemistry</option>
+          <option value="Math">Math</option>
+          <option value="Biology">Biology</option>
+        </select>
+
+        <select id="chapterSelect" class="p-2 border rounded">
+          <option disabled selected>Select Chapter</option>
+        </select>
+      </div>
+
+      <!-- Save Button -->
+      <button
+        type="button"
+        onclick="saveQuestion()"
+        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-full mt-6"
+      >
+        SAVE
+      </button>
+    </main>
+
+    <!-- Script -->
+    <script>
+      const root = document.getElementById("output");
+      const textArea = document.getElementById("textOutput");
+      const optA = document.getElementById("optA");
+      const optB = document.getElementById("optB");
+      const optC = document.getElementById("optC");
+      const optD = document.getElementById("optD");
+
+      function handleImg(input) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const imgData = e.target.result;
+          const img = new Image();
+          img.src = imgData;
+          img.classList.add("max-w-xs", "md:max-w-md", "rounded-lg", "shadow-md", "mx-auto", "my-4");
+          root.innerHTML = "";
+          root.appendChild(img);
+
+          Tesseract.recognize(imgData, "eng", {
+            logger: (m) => console.log(m),
+            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789().: '
+          }).then(({ data: { text } }) => {
+            const lines = text.split("\n").map(l => l.trim()).filter(l => l);
+            let questionLines = [];
+            let options = { A: "", B: "", C: "", D: "" };
+
+            lines.forEach(line => {
+              if (/^A[\).:\s]/i.test(line)) options.A = line;
+              else if (/^B[\).:\s]/i.test(line)) options.B = line;
+              else if (/^C[\).:\s]/i.test(line)) options.C = line;
+              else if (/^D[\).:\s]/i.test(line)) options.D = line;
+              else questionLines.push(line);
+            });
+
+            textArea.value = questionLines.join(" ");
+            optA.value = options.A.replace(/^A[\).:\s]*/i, "");
+            optB.value = options.B.replace(/^B[\).:\s]*/i, "");
+            optC.value = options.C.replace(/^C[\).:\s]*/i, "");
+            optD.value = options.D.replace(/^D[\).:\s]*/i, "");
+
+            input.value = "";
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function handlePdf(input) {
+        alert("PDF uploading not implemented yet.");
+        input.value = "";
+      }
+
+      function saveQuestion() {
+        const data = {
+          question: textArea.value,
+          options: {
+            A: optA.value,
+            B: optB.value,
+            C: optC.value,
+            D: optD.value,
+          },
+          class: document.getElementById("classSelect").value,
+          subject: document.getElementById("subjectSelect").value,
+          chapter: document.getElementById("chapterSelect").value,
+        };
+
+        console.log("Saved Question Data:", data);
+        alert("Question saved to console. Ready to integrate backend!");
+      }
+
+      // Dynamic Chapter Dropdown
+      const chapterSelect = document.getElementById("chapterSelect");
+      const classSelect = document.getElementById("classSelect");
+      const subjectSelect = document.getElementById("subjectSelect");
+
+      const chapterMap = {
+        "11-Physics": ["Units & Measurements", "Kinematics", "Laws of Motion", "Work, Power & Energy"],
+        "11-Chemistry": ["Some Basic Concepts", "Structure of Atom", "Periodic Table", "Chemical Bonding"],
+        "11-Math": ["Sets", "Relations & Functions", "Trigonometry", "Complex Numbers"],
+        "11-Biology": ["Diversity of Living World", "Cell", "Plant Physiology", "Human Physiology"],
+
+        "12-Physics": ["Electrostatics", "Current Electricity", "Magnetism", "Optics", "Modern Physics"],
+        "12-Chemistry": ["Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", "Biomolecules"],
+        "12-Math": ["Matrices & Determinants", "Differentiation", "Integration", "Vectors & 3D Geometry"],
+        "12-Biology": ["Reproduction", "Genetics", "Evolution", "Human Health & Diseases"]
+      };
+
+      function updateChapters() {
+        const cls = classSelect.value;
+        const subj = subjectSelect.value;
+        const key = `${cls}-${subj}`;
+        const chapters = chapterMap[key] || [];
+
+        chapterSelect.innerHTML = '<option disabled selected>Select Chapter</option>';
+        chapters.forEach(ch => {
+          const opt = document.createElement("option");
+          opt.value = ch;
+          opt.textContent = ch;
+          chapterSelect.appendChild(opt);
+        });
+      }
+
+      classSelect.addEventListener("change", updateChapters);
+      subjectSelect.addEventListener("change", updateChapters);
+    </script>
+  </body>
 </html>
