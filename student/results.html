@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Result</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-cyan-50 min-h-screen text-gray-800">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md py-2 px-4 flex justify-between items-center sticky top-0 z-50">
+    <div>
+      <img src="../assets/logo.png" alt="Logo" class="h-10 w-auto" />
+    </div>
+    <div class="space-x-2 text-sm md:space-x-4 md:text-base">
+      <a href="index.html" class="font-medium text-gray-600 hover:text-cyan-600">Dashboard</a>
+      <a href="tests.html" class="font-medium text-gray-600 hover:text-cyan-600">Tests</a>
+      <a href="results.html" class="font-semibold text-cyan-700 border-b-2 border-cyan-700">Results</a>
+      <a href="profile.html" class="font-medium text-gray-600 hover:text-cyan-600">Profile</a>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center mb-6">Test Results</h1>
+
+    <section class="bg-white p-6 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-4">Summary</h2>
+      <p><strong>Name:</strong> John Doe</p>
+      <p><strong>Class:</strong> 12</p>
+      <p><strong>Date:</strong> 2025-07-10</p>
+      <p><strong>Total Questions:</strong> 30</p>
+      <p><strong>Total Marks:</strong> 30</p>
+      <p><strong>Marks Obtained:</strong> 26</p>
+    </section>
+
+    <section class="bg-white p-6 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-4">Subject-wise Breakdown</h2>
+      <div class="space-y-4">
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">Physics</h3>
+          <p>Correct: 9 / 10</p>
+        </div>
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">Chemistry</h3>
+          <p>Correct: 8 / 10</p>
+        </div>
+        <div class="border p-4 rounded">
+          <h3 class="font-semibold">Math</h3>
+          <p>Correct: 9 / 10</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="text-center">
+      <a href="student_dashboard.html" class="bg-cyan-600 text-white px-6 py-2 rounded hover:bg-cyan-700">
+        Back to Dashboard
+      </a>
+    </div>
+  </main>
+</body>
+</html>
