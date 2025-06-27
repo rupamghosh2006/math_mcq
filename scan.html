@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    </head>
+    <body>
+        Upload Image:
+        <button>
+            <input id="imgInput" type="file" accept="image/*" capture="environment" onchange="handleImg(this)">
+        </button>
+        Upload PDF:
+        <button>
+            <input id="pdfInput" type="file" accept=".pdf, application/pdf" onchange="handlePdf(this)">
+        </button>
+        <div id="output"></div>
+        <textarea id="textOutput" rows="10" cols="50"></textarea>
+        <button type="submit">SAVE</button>
+
+        <script>
+            const root = document.getElementById("output")
+            const textArea = document.getElementById("textOutput")
+
+            function handleImg(input) {
+                const file = input.files[0]
+                const reader = new FileReader()
+                reader.onload = function (e) {
+                    const imgData = e.target.result
+                    const img = new Image()
+                    img.src = imgData
+                    root.innerHTML = ""
+                    root.appendChild(img)
+                    Tesseract.recognize(
+                        imgData,
+                        'eng',
+                        { logger: m => console.log(m) }
+                    ).then(({ data: { text } }) => {
+                        textArea.value = text
+                        input.value = ""
+                    })
+                }
+                reader.readAsDataURL(file)
+            }
+
+
+            function handlePdf(input) {
+                const file = input.files[0]
+                window.alert("PDF uploading not implemented.")
+                input.value = ""
+            }
+        </script>
+    </body>
+</html>
