@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Form</title>
+    <style>
+        #formContainer { display: none; margin-top: 20px; }
+        .chapter-list { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <button onclick="showForm()">Make Test</button>
+
+    <div id="formContainer">
+        <label>Select Class:</label><br>
+        <input type="checkbox" value="11" onchange="filterChapters()" class="class-filter"> Class 11
+        <input type="checkbox" value="12" onchange="filterChapters()" class="class-filter"> Class 12
+
+        <div style="margin-top:10px;">
+            <label>Search Chapters:</label><br>
+            <input type="text" id="searchBox" oninput="filterChapters()" placeholder="Type chapter name...">
+        </div>
+
+        <div class="chapter-list" id="chapterList"></div>
+
+        <button onclick="submitForm()">Submit</button>
+    </div>
+
+    <script>
+        const chapters = [
+            { name: "Motion", class: "11" },
+            { name: "Thermodynamics", class: "11" },
+            { name: "Oscillations", class: "11" },
+            { name: "Electrostatics", class: "12" },
+            { name: "Magnetism", class: "12" },
+            { name: "Optics", class: "12" }
+        ];
+
+        function showForm() {
+            document.getElementById('formContainer').style.display = 'block';
+            filterChapters();
+        }
+
+        function filterChapters() {
+            const selectedClasses = [...document.querySelectorAll('.class-filter:checked')].map(cb => cb.value);
+            const search = document.getElementById('searchBox').value.toLowerCase();
+
+            const filtered = chapters.filter(ch =>
+                (selectedClasses.length === 0 || selectedClasses.includes(ch.class)) &&
+                ch.name.toLowerCase().includes(search)
+            );
+
+            const listDiv = document.getElementById('chapterList');
+            listDiv.innerHTML = '';
+            filtered.forEach(ch => {
+                const label = document.createElement('label');
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.value = ch.name;
+                label.appendChild(cb);
+                label.appendChild(document.createTextNode(` ${ch.name} (Class ${ch.class})`));
+                listDiv.appendChild(label);
+                listDiv.appendChild(document.createElement('br'));
+            });
+        }
+
+        function submitForm() {
+            const selected = [...document.querySelectorAll('#chapterList input:checked')].map(cb => cb.value);
+            alert("Selected chapters:\n" + selected.join("\n"));
+        }
+    </script>
+</body>
+</html>
