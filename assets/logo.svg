@@ -1,0 +1,7 @@
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="200" height="60" fill="#111" />
+  <circle cx="30" cy="30" r="12" stroke="#00FFD1" stroke-width="3"/>
+  <path d="M24 25 L30 20 L36 25" stroke="#00FFD1" stroke-width="2" fill="none"/>
+  <path d="M24 35 L30 40 L36 35" stroke="#00FFD1" stroke-width="2" fill="none"/>
+  <text x="60" y="38" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="bold">EduNova</text>
+</svg>
