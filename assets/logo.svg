@@ -2,8 +2,7 @@
   <!--rect width="240" height="80" fill="#2D2D2D"/-->
 
   <!-- Icon: stylized open book + graduation cap -->
-  <!--g transform="translate(20,20)"-->
-  <g>
+  <g transform="translate(0,5)">
     <path d="M10 30 Q20 20 30 30 Q40 40 50 30" fill="none" stroke="#00FFD1" stroke-width="2.5"/>
     <path d="M10 30 L10 45 Q20 55 30 45 Q40 55 50 45 L50 30" fill="none" stroke="#00FFD1" stroke-width="2.5"/>
     <polygon points="30,0 50,10 30,20 10,10" fill="#00FFD1"/>

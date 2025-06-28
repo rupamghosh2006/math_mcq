@@ -10,7 +10,7 @@
 <body class="bg-cyan-50 min-h-screen text-gray-800">
 
   <!-- Navbar -->
-  <nav id="navbar" class="bg-white shadow-md py-2 px-4 flex justify-between items-center sticky top-0 z-50">
+  <!--nav id="navbar" class="bg-white shadow-md py-2 px-4 flex justify-between items-center sticky top-0 z-50">
     <div class="bg-black rounded-full">
       <img src="../assets/logo.svg" alt="Logo" class="h-10 w-auto" />
     </div>
@@ -20,7 +20,7 @@
       <a href="results.html" class="font-medium text-gray-600 hover:text-cyan-600">Results</a>
       <a href="profile.html" class="font-medium text-gray-600 hover:text-cyan-600">Profile</a>
     </div>
-  </nav>
+  </nav-->
 
   <main class="max-w-4xl mx-auto p-4">
     <h1 class="text-2xl font-bold text-center mb-6">Mock Test</h1>
@@ -31,7 +31,8 @@
   </div>
 
     <!-- Start Test Card -->
-    <div id="startCard" class="bg-white p-6 rounded shadow text-center">
+    <div id="startCard" class="relative bg-white p-6 rounded shadow text-center">
+      <a href="/student/" class="absolute top-2 right-2 px-2 text-cyan-600 hover:text-cyan-800 font-semibold">Home</a>
       <h2 class="text-xl font-semibold mb-4">Test Details</h2>
       <p><strong>Subjects:</strong> Physics, Chemistry, Math</p>
       <p><strong>Total Questions:</strong> 30</p>
@@ -43,17 +44,18 @@
     <div id="questionContainer" class="hidden bg-white p-6 rounded shadow space-y-4">
       <div id="questionText" class="font-medium text-lg"></div>
       <div class="pt-2">
-        <button onclick="clearAnswer()" class="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600">
-          Clear Answer
-        </button>
+        
       </div>
       <div id="options" class="space-y-2"></div>
       <div class="flex justify-between pt-4">
         <button onclick="prevQuestion()" class="bg-gray-300 px-4 py-2 rounded">Previous</button>
         <button onclick="nextQuestion()" class="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700">Next</button>
       </div>
-      <div class="flex justify-end pt-2">
-        <button onclick="submitTest()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Submit Test</button>
+      <div class="flex justify-between pt-2">
+        <button onclick="clearAnswer()" class="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600">
+          Clear Answer
+        </button>
+        <button onclick="confirmSubmit()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Submit Test</button>
     </div>
     </div>
 
@@ -174,6 +176,12 @@
     }, 1000);
     }
 
+    function confirmSubmit() {
+    const confirmed = confirm("Are you sure you want to submit the test?");
+    if (confirmed) {
+      submitTest();
+    }
+  }
     function submitTest() {
         clearInterval(timerInterval);
 
@@ -185,8 +193,25 @@
 
         console.log("Submitted Answers JSON:", JSON.stringify(result, null, 2));
         alert("Test submitted successfully!");
-        window.location.href = "/";
+        window.location.href = "/student/";
     }
+
+      document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+        nextQuestion();
+        break;
+      case 'ArrowLeft':
+        prevQuestion();
+        break;
+      case 'Delete':
+        clearAnswer();
+        break;
+      case 'Enter':
+        confirmSubmit()
+    }
+  });
+
 
   </script>
 </body>
