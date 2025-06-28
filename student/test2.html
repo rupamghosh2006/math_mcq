@@ -8,7 +8,7 @@
 </head>
 <body class="bg-cyan-50 min-h-screen text-gray-800">
 
-  <!-- Navbar -->
+  <!-- Navbar (will hide on test start) -->
   <nav id="navbar" class="bg-white shadow-md py-2 px-4 flex justify-between items-center sticky top-0 z-50">
     <div>
       <img src="../assets/logo.png" alt="Logo" class="h-10 w-auto" />
@@ -24,11 +24,6 @@
   <main class="max-w-4xl mx-auto p-4">
     <h1 class="text-2xl font-bold text-center mb-6">Mock Test</h1>
 
-    <!-- Timer -->
-  <div id="timerBox" class="hidden mb-4 flex justify-start md:justify-center">
-    <span class="bg-gray-800 text-white px-4 py-2 rounded text-lg font-mono" id="timer">00:30</span>
-  </div>
-
     <!-- Start Test Card -->
     <div id="startCard" class="bg-white p-6 rounded shadow text-center">
       <h2 class="text-xl font-semibold mb-4">Test Details</h2>
@@ -38,155 +33,76 @@
       <button onclick="startTest()" class="mt-4 bg-cyan-600 text-white px-6 py-2 rounded hover:bg-cyan-700">Start Test</button>
     </div>
 
-    <!-- Question Display -->
-    <div id="questionContainer" class="hidden bg-white p-6 rounded shadow space-y-4">
-      <div id="questionText" class="font-medium text-lg"></div>
-      <div class="pt-2">
-        <button onclick="clearAnswer()" class="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600">
-          Clear Answer
+    <!-- Test Form (Initially Hidden) -->
+    <form id="testForm" class="space-y-8 hidden">
+      <!-- Subject Loop: Physics, Chemistry, Math -->
+      <div class="space-y-8">
+        <section>
+          <h2 class="text-xl font-semibold mb-4">Physics</h2>
+          <div class="space-y-4">
+            <div class="bg-white p-4 rounded shadow">
+              <p class="font-medium">Q1. What is the unit of force?</p>
+              <div class="mt-2 space-y-2">
+                <label><input type="radio" name="phy1" value="A" class="mr-2">Newton</label><br>
+                <label><input type="radio" name="phy1" value="B" class="mr-2">Joule</label><br>
+                <label><input type="radio" name="phy1" value="C" class="mr-2">Pascal</label><br>
+                <label><input type="radio" name="phy1" value="D" class="mr-2">Watt</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold mb-4">Chemistry</h2>
+          <div class="space-y-4">
+            <div class="bg-white p-4 rounded shadow">
+              <p class="font-medium">Q1. What is the atomic number of Oxygen?</p>
+              <div class="mt-2 space-y-2">
+                <label><input type="radio" name="chem1" value="A" class="mr-2">6</label><br>
+                <label><input type="radio" name="chem1" value="B" class="mr-2">7</label><br>
+                <label><input type="radio" name="chem1" value="C" class="mr-2">8</label><br>
+                <label><input type="radio" name="chem1" value="D" class="mr-2">9</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold mb-4">Math</h2>
+          <div class="space-y-4">
+            <div class="bg-white p-4 rounded shadow">
+              <p class="font-medium">Q1. What is the derivative of x^2?</p>
+              <div class="mt-2 space-y-2">
+                <label><input type="radio" name="math1" value="A" class="mr-2">x</label><br>
+                <label><input type="radio" name="math1" value="B" class="mr-2">2x</label><br>
+                <label><input type="radio" name="math1" value="C" class="mr-2">x^2</label><br>
+                <label><input type="radio" name="math1" value="D" class="mr-2">1</label>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button type="submit" class="bg-cyan-600 text-white px-6 py-2 rounded hover:bg-cyan-700">
+          Submit Test
         </button>
       </div>
-      <div id="options" class="space-y-2"></div>
-      <div class="flex justify-between pt-4">
-        <button onclick="prevQuestion()" class="bg-gray-300 px-4 py-2 rounded">Previous</button>
-        <button onclick="nextQuestion()" class="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700">Next</button>
-      </div>
-      <div class="flex justify-end pt-2">
-        <button onclick="submitTest()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Submit Test</button>
-    </div>
-    </div>
-
-    <div id="questionGrid" class="hidden fixed right-4 top-28 bg-white p-4 rounded shadow grid grid-cols-5 gap-2 w-48">
-        <!-- Buttons will be added here dynamically -->
-    </div>
-
+    </form>
   </main>
 
   <script>
-    let questions = [];
-    let currentIndex = 0;
-    let answers = {};
-    let timeLeft = 30; // seconds
-    let timerInterval = null;
-
-
-    async function startTest() {
-        document.getElementById("startCard").classList.add("hidden");
-        document.getElementById("questionContainer").classList.remove("hidden");
-        
-        const res = await fetch("question.json");
-        const data = await res.json();
-
-        // Flatten all questions
-        questions = data.flatMap(section => section.questions.map(q => ({
-        ...q,
-        subject: section.subject
-        })));
-
-        // Show question navigator grid
-        const grid = document.getElementById("questionGrid");
-        grid.classList.remove("hidden");
-        grid.innerHTML = questions.map((_, i) => `
-        <button id="qbtn-${i}" onclick="goToQuestion(${i})"
-            class="bg-white border text-sm w-8 h-8 rounded">
-            ${i + 1}
-        </button>
-        `).join("");
-
-        showQuestion(currentIndex);
-        document.getElementById("timerBox").classList.remove("hidden");
-        startTimer();
-
+    function startTest() {
+      document.getElementById('startCard').classList.add('hidden');
+      document.getElementById('testForm').classList.remove('hidden');
+      document.getElementById('navbar').classList.add('hidden');
     }
 
-    function showQuestion(index) {
-        const q = questions[index];
-        document.getElementById("questionText").innerText = `${q.subject}: ${q.question}`;
-        
-        const opts = Object.entries(q.options).map(([key, val]) => `
-            <label class="block">
-            <input type="radio" name="q${index}" value="${key}" class="mr-2"
-                ${answers[q.id] === key ? "checked" : ""} 
-                onchange="answers['${q.id}'] = this.value; showQuestion(${index});"
-            > ${val}
-            </label>
-        `).join("");
-        document.getElementById("options").innerHTML = opts;
-
-        // Mark question as visited if not already
-        questions[index].visited = true;
-
-        // Update button colors
-        questions.forEach((q, i) => {
-            const btn = document.getElementById(`qbtn-${i}`);
-            if (!btn) return;
-
-            if (answers[q.id]) {
-            btn.className = "bg-green-500 text-white w-8 h-8 rounded text-sm";
-            } else if (q.visited) {
-            btn.className = "bg-red-500 text-white w-8 h-8 rounded text-sm";
-            } else {
-            btn.className = "bg-white border text-sm w-8 h-8 rounded";
-            }
-        });
-    }
-
-
-    function nextQuestion() {
-        if (currentIndex < questions.length - 1) {
-        currentIndex++;
-        showQuestion(currentIndex);
-        }
-    }
-
-    function prevQuestion() {
-        if (currentIndex > 0) {
-        currentIndex--;
-        showQuestion(currentIndex);
-        }
-    }
-
-    function goToQuestion(index) {
-        currentIndex = index;
-        showQuestion(index);
-    }
-
-    function clearAnswer() {
-        const q = questions[currentIndex];
-        delete answers[q.id];
-        showQuestion(currentIndex); // Refresh current question view
-    }
-
-    function startTimer() {
-    const timerEl = document.getElementById("timer");
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-        const seconds = String(timeLeft % 60).padStart(2, '0');
-        timerEl.textContent = `${minutes}:${seconds}`;
-
-        if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        alert("Time's up! Submitting the test.");
-        submitTest();
-        }
-    }, 1000);
-    }
-
-    function submitTest() {
-        clearInterval(timerInterval);
-
-        const result = questions.map((q, i) => ({
-            questionNumber: i + 1,
-            questionId: q.id,
-            selectedOption: answers[q.id] || null
-        }));
-
-        console.log("Submitted Answers JSON:", JSON.stringify(result, null, 2));
-        alert("Test submitted successfully!");
-        window.location.href = "results.html";
-    }
-
+    document.getElementById("testForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Test submitted! (In prototype, nothing is stored)");
+    });
   </script>
 </body>
 </html>
